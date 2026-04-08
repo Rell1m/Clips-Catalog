@@ -238,15 +238,22 @@
   </div>
 
   <script>
+    // Edit this array to add your own anime / movies.
+    // Recommended fields:
+    // title: string
+    // description: string
+    // tags: array of strings
+    // cover: image URL or local path
+    // download: download URL or local file path
+    // fragments: array of { img, text }
     const data = [
-      // Поле download — ссылка на скачивание (Google Drive, локальный файл и т.д.)
       {
         id: 1,
-        download: '#',
         title: 'Cyber City Run',
         description: 'Ночной город, неон, быстрый монтаж и напряжённая атмосфера.',
         tags: ['cyberpunk', 'night', 'action', 'neo-noir'],
         cover: 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=1200&q=80',
+        download: '#',
         fragments: [
           { img: 'https://images.unsplash.com/photo-1508341591423-4347099e1f19?auto=format&fit=crop&w=800&q=80', text: 'Фрагмент с движением камеры и ярким светом.' },
           { img: 'https://images.unsplash.com/photo-1516035069371-29a1b244cc32?auto=format&fit=crop&w=800&q=80', text: 'Сцена с сильным контрастом и динамикой.' }
@@ -254,11 +261,11 @@
       },
       {
         id: 2,
-        download: '#',
         title: 'Silent Rain',
         description: 'Медленный, грустный вайб с упором на эмоции и атмосферу.',
         tags: ['sad', 'romance', 'melancholy', 'drama'],
         cover: 'https://images.unsplash.com/photo-1493246507139-91e8fad9978e?auto=format&fit=crop&w=1200&q=80',
+        download: '#',
         fragments: [
           { img: 'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=800&q=80', text: 'Тихий фрагмент с дождём и мягким светом.' },
           { img: 'https://images.unsplash.com/photo-1516280030429-bf2e4f1bc5a7?auto=format&fit=crop&w=800&q=80', text: 'Сцена для лирического перехода.' }
@@ -266,11 +273,11 @@
       },
       {
         id: 3,
-        download: '#',
         title: 'Blade Motion',
         description: 'Жёсткий экшен, резкие движения, идеально для сильного темпа.',
         tags: ['action', 'fast', 'fight', 'shonen'],
         cover: 'https://images.unsplash.com/photo-1485846234645-a62644f84728?auto=format&fit=crop&w=1200&q=80',
+        download: '#',
         fragments: [
           { img: 'https://images.unsplash.com/photo-1511884642898-4c92249e20b6?auto=format&fit=crop&w=800&q=80', text: 'Кадр под удар/хит-поинт.' },
           { img: 'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&w=800&q=80', text: 'Кадр для резкого акцента.' }
@@ -287,7 +294,7 @@
     const modal = document.getElementById('modal');
     const closeModal = document.getElementById('closeModal');
 
-    let activeTag = '';
+    let selectedTags = [];
     let query = '';
 
     const allTags = [...new Set(data.flatMap(item => item.tags))].sort();
@@ -296,10 +303,14 @@
       tagCloud.innerHTML = '';
       allTags.forEach(tag => {
         const el = document.createElement('div');
-        el.className = 'tag' + (activeTag === tag ? ' active' : '');
+        el.className = 'tag' + (selectedTags.includes(tag) ? ' active' : '');
         el.textContent = '#' + tag;
         el.onclick = () => {
-          activeTag = activeTag === tag ? '' : tag;
+          if (selectedTags.includes(tag)) {
+            selectedTags = selectedTags.filter(t => t !== tag);
+          } else {
+            selectedTags = [...selectedTags, tag];
+          }
           renderTags();
           renderCards();
         };
@@ -310,9 +321,9 @@
     function matches(item) {
       const hay = [item.title, item.description, ...item.tags].join(' ').toLowerCase();
       const q = query.trim().toLowerCase();
-      const tagOk = !activeTag || item.tags.includes(activeTag);
       const queryOk = !q || hay.includes(q);
-      return tagOk && queryOk;
+      const tagsOk = selectedTags.length === 0 || selectedTags.every(tag => item.tags.includes(tag));
+      return queryOk && tagsOk;
     }
 
     function renderCards() {
@@ -320,12 +331,13 @@
       grid.innerHTML = '';
 
       resultsText.textContent = `Найдено: ${filtered.length} из ${data.length}`;
-      activeFilters.textContent = [query ? `поиск: “${query}”` : '', activeTag ? `тег: #${activeTag}` : '']
-        .filter(Boolean)
-        .join(' · ');
+      const parts = [];
+      if (query) parts.push(`поиск: “${query}”`);
+      if (selectedTags.length) parts.push(`теги: ${selectedTags.map(t => '#' + t).join(', ')}`);
+      activeFilters.textContent = parts.join(' · ');
 
       if (!filtered.length) {
-        grid.innerHTML = '<div class="empty">Ничего не найдено. Измени запрос или сбрось фильтры.</div>';
+        grid.innerHTML = '<div class="empty">Ничего не найдено. Измени поиск или теги.</div>';
         return;
       }
 
@@ -346,11 +358,11 @@
     }
 
     function openModal(item) {
-      document.getElementById('downloadBtn').href = item.download || '#';
       document.getElementById('modalTitle').textContent = item.title;
       document.getElementById('modalTags').textContent = item.tags.map(t => '#' + t).join('  ');
       document.getElementById('modalDescription').textContent = item.description;
       document.getElementById('modalHero').src = item.cover;
+      document.getElementById('downloadBtn').href = item.download || '#';
 
       const fragmentList = document.getElementById('fragmentList');
       fragmentList.innerHTML = item.fragments.map(f => `
@@ -370,7 +382,7 @@
 
     clearFilters.onclick = () => {
       query = '';
-      activeTag = '';
+      selectedTags = [];
       searchInput.value = '';
       renderTags();
       renderCards();
