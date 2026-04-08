@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Локальный каталог аниме-нарезок</title>
+  <style>
+    :root{
+      --bg:#0b0d12;
+      --panel:#121622;
+      --panel-2:#171c2a;
+      --text:#eef1f7;
+      --muted:#a8b0c2;
+      --line:rgba(255,255,255,.08);
+      --accent:#7c8cff;
+      --accent-2:#67d6c4;
+      --shadow:0 20px 60px rgba(0,0,0,.35);
+      --radius:22px;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      background:
+        radial-gradient(circle at top, rgba(124,140,255,.16), transparent 28%),
+        radial-gradient(circle at right, rgba(103,214,196,.12), transparent 22%),
+        var(--bg);
+      color:var(--text);
+    }
+    .app{max-width:1280px; margin:0 auto; padding:28px 18px 44px;}
+    .topbar{
+      display:flex; gap:14px; flex-wrap:wrap; align-items:center; justify-content:space-between;
+      margin-bottom:18px;
+    }
+    .title h1{margin:0; font-size:28px; letter-spacing:.2px}
+    .title p{margin:6px 0 0; color:var(--muted); font-size:14px}
+    .controls{
+      display:flex; gap:10px; flex-wrap:wrap; align-items:center; width:min(100%, 760px);
+    }
+    .search{
+      flex:1 1 280px;
+      display:flex; align-items:center; gap:10px;
+      padding:14px 16px;
+      background:rgba(255,255,255,.04);
+      border:1px solid var(--line);
+      border-radius:16px;
+      box-shadow:var(--shadow);
+      backdrop-filter: blur(10px);
+    }
+    .search input{
+      width:100%; border:0; outline:0; background:transparent; color:var(--text);
+      font-size:15px;
+    }
+    .pill-btn{
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.04);
+      color:var(--text);
+      padding:13px 14px;
+      border-radius:16px;
+      cursor:pointer;
+      transition:.2s ease;
+    }
+    .pill-btn:hover{transform:translateY(-1px); background:rgba(255,255,255,.07)}
+    .layout{
+      display:grid;
+      grid-template-columns: 290px 1fr;
+      gap:18px;
+      align-items:start;
+    }
+    .sidebar,.content,.modal-card{
+      background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.03));
+      border:1px solid var(--line);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      backdrop-filter: blur(10px);
+    }
+    .sidebar{padding:18px; position:sticky; top:18px}
+    .section-title{margin:0 0 12px; font-size:15px; color:#dfe4f2}
+    .tag-cloud{display:flex; flex-wrap:wrap; gap:8px}
+    .tag{
+      padding:8px 10px; border-radius:999px; border:1px solid var(--line);
+      background:rgba(255,255,255,.04); color:var(--text); cursor:pointer; font-size:13px;
+      user-select:none; transition:.2s ease;
+    }
+    .tag:hover{transform:translateY(-1px)}
+    .tag.active{background:linear-gradient(135deg, rgba(124,140,255,.25), rgba(103,214,196,.18)); border-color:rgba(124,140,255,.35)}
+    .meta-box{
+      margin-top:18px; padding:14px; border-radius:18px; background:rgba(0,0,0,.15); border:1px solid var(--line);
+      color:var(--muted); font-size:13px; line-height:1.5;
+    }
+    .content{padding:18px}
+    .results-bar{
+      display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap;
+      margin-bottom:14px;
+    }
+    .results-bar strong{font-size:14px}
+    .grid{
+      display:grid;
+      grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+      gap:14px;
+    }
+    .card{
+      overflow:hidden;
+      border-radius:20px;
+      background:rgba(255,255,255,.04);
+      border:1px solid var(--line);
+      cursor:pointer;
+      transition:.22s ease;
+    }
+    .card:hover{transform:translateY(-3px); border-color:rgba(124,140,255,.25)}
+    .thumb{
+      aspect-ratio: 16/10;
+      width:100%;
+      object-fit:cover;
+      display:block;
+      background:linear-gradient(135deg, rgba(124,140,255,.22), rgba(103,214,196,.15));
+    }
+    .card-body{padding:13px 13px 14px}
+    .card h3{margin:0 0 8px; font-size:16px}
+    .card p{margin:0; color:var(--muted); font-size:13px; line-height:1.45}
+    .chips{display:flex; flex-wrap:wrap; gap:6px; margin-top:11px}
+    .chip{
+      font-size:12px; color:#dce3ff; padding:5px 8px; border-radius:999px;
+      background:rgba(124,140,255,.12); border:1px solid rgba(124,140,255,.18);
+    }
+    .empty{
+      padding:28px; text-align:center; color:var(--muted); border:1px dashed var(--line); border-radius:20px;
+    }
+    .modal{
+      position:fixed; inset:0; display:none; align-items:center; justify-content:center; padding:18px;
+      background:rgba(5,7,12,.72); z-index:20;
+    }
+    .modal.open{display:flex}
+    .modal-card{
+      width:min(980px, 100%);
+      max-height:min(90vh, 940px);
+      overflow:auto;
+      padding:18px;
+    }
+    .modal-top{display:flex; justify-content:space-between; gap:14px; align-items:flex-start; margin-bottom:14px}
+    .modal-top h2{margin:0 0 8px; font-size:26px}
+    .close{
+      border:0; background:rgba(255,255,255,.06); color:var(--text); width:42px; height:42px; border-radius:14px; cursor:pointer;
+    }
+    .hero{
+      width:100%; max-height:340px; object-fit:cover; border-radius:18px; border:1px solid var(--line);
+      margin-bottom:14px; background:rgba(255,255,255,.04);
+    }
+    .detail-grid{display:grid; grid-template-columns: 1.2fr .8fr; gap:14px}
+    .panel{background:rgba(0,0,0,.14); border:1px solid var(--line); border-radius:18px; padding:14px}
+    .panel h4{margin:0 0 10px; font-size:14px}
+    .fragments{display:grid; gap:10px}
+    .fragment{
+      display:grid; grid-template-columns: 120px 1fr; gap:12px; align-items:start;
+      padding:10px; border-radius:16px; background:rgba(255,255,255,.04); border:1px solid var(--line);
+    }
+    .fragment img{width:120px; height:72px; object-fit:cover; border-radius:12px}
+    .fragment p{margin:0; color:var(--muted); font-size:13px; line-height:1.5}
+    .small{color:var(--muted); font-size:13px; line-height:1.6}
+    .footer-note{margin-top:12px; color:var(--muted); font-size:12px}
+    @media (max-width: 960px){
+      .layout{grid-template-columns:1fr}
+      .sidebar{position:relative; top:0}
+      .detail-grid{grid-template-columns:1fr}
+    }
+    @media (max-width: 560px){
+      .grid{grid-template-columns:1fr 1fr}
+      .fragment{grid-template-columns:1fr}
+      .fragment img{width:100%; height:170px}
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <div class="topbar">
+      <div class="title">
+        <h1>Каталог нарезок</h1>
+        <p>Локальный сайт для аниме и фильмов: поиск, теги, карточки, подробный просмотр.</p>
+      </div>
+      <div class="controls">
+        <div class="search">
+          <span>⌕</span>
+          <input id="searchInput" type="text" placeholder="Поиск по названию, описанию или тегам..." />
+        </div>
+        <button class="pill-btn" id="clearFilters">Сбросить фильтры</button>
+      </div>
+    </div>
+
+    <div class="layout">
+      <aside class="sidebar">
+        <h3 class="section-title">Теги</h3>
+        <div class="tag-cloud" id="tagCloud"></div>
+        <div class="meta-box">
+          <strong style="color:var(--text)">Как хранить данные</strong><br>
+          Каждая запись может содержать: название, описание, теги, обложку и список фрагментов. Потом это легко перенести в JSON или базу.
+        </div>
+      </aside>
+
+      <main class="content">
+        <div class="results-bar">
+          <strong id="resultsText">Загрузка...</strong>
+          <span class="small" id="activeFilters"></span>
+        </div>
+        <div class="grid" id="grid"></div>
+      </main>
+    </div>
+  </div>
+
+  <div class="modal" id="modal">
+    <div class="modal-card">
+      <div class="modal-top">
+        <div>
+          <h2 id="modalTitle"></h2>
+          <div class="small" id="modalTags"></div>
+        </div>
+        <button class="close" id="closeModal">✕</button>
+      </div>
+      <img class="hero" id="modalHero" alt="Обложка" />
+      <div class="detail-grid">
+        <section class="panel">
+          <h4>Описание</h4>
+          <div class="small" id="modalDescription"></div>
+        </section>
+        <section class="panel">
+          <h4>Фильтры</h4>
+          <div class="small">Можно искать по жанрам, стилю и настроению. Например: <b>#cyberpunk</b>, <b>#sad</b>, <b>#romance</b>.</div>
+        </section>
+      </div>
+      <section class="panel" style="margin-top:14px">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px">
+          <h4 style="margin:0">Фрагменты</h4>
+          <a id="downloadBtn" href="#" download class="pill-btn" style="text-decoration:none">⬇ Скачать</a>
+        </div>
+        <h4>Фрагменты</h4>
+        <div class="fragments" id="fragmentList"></div>
+      </section>
+    </div>
+  </div>
+
+  <script>
+    const data = [
+      // Поле download — ссылка на скачивание (Google Drive, локальный файл и т.д.)
+      {
+        id: 1,
+        download: '#',
+        title: 'Cyber City Run',
+        description: 'Ночной город, неон, быстрый монтаж и напряжённая атмосфера.',
+        tags: ['cyberpunk', 'night', 'action', 'neo-noir'],
+        cover: 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=1200&q=80',
+        fragments: [
+          { img: 'https://images.unsplash.com/photo-1508341591423-4347099e1f19?auto=format&fit=crop&w=800&q=80', text: 'Фрагмент с движением камеры и ярким светом.' },
+          { img: 'https://images.unsplash.com/photo-1516035069371-29a1b244cc32?auto=format&fit=crop&w=800&q=80', text: 'Сцена с сильным контрастом и динамикой.' }
+        ]
+      },
+      {
+        id: 2,
+        download: '#',
+        title: 'Silent Rain',
+        description: 'Медленный, грустный вайб с упором на эмоции и атмосферу.',
+        tags: ['sad', 'romance', 'melancholy', 'drama'],
+        cover: 'https://images.unsplash.com/photo-1493246507139-91e8fad9978e?auto=format&fit=crop&w=1200&q=80',
+        fragments: [
+          { img: 'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=800&q=80', text: 'Тихий фрагмент с дождём и мягким светом.' },
+          { img: 'https://images.unsplash.com/photo-1516280030429-bf2e4f1bc5a7?auto=format&fit=crop&w=800&q=80', text: 'Сцена для лирического перехода.' }
+        ]
+      },
+      {
+        id: 3,
+        download: '#',
+        title: 'Blade Motion',
+        description: 'Жёсткий экшен, резкие движения, идеально для сильного темпа.',
+        tags: ['action', 'fast', 'fight', 'shonen'],
+        cover: 'https://images.unsplash.com/photo-1485846234645-a62644f84728?auto=format&fit=crop&w=1200&q=80',
+        fragments: [
+          { img: 'https://images.unsplash.com/photo-1511884642898-4c92249e20b6?auto=format&fit=crop&w=800&q=80', text: 'Кадр под удар/хит-поинт.' },
+          { img: 'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&w=800&q=80', text: 'Кадр для резкого акцента.' }
+        ]
+      }
+    ];
+
+    const grid = document.getElementById('grid');
+    const tagCloud = document.getElementById('tagCloud');
+    const searchInput = document.getElementById('searchInput');
+    const resultsText = document.getElementById('resultsText');
+    const activeFilters = document.getElementById('activeFilters');
+    const clearFilters = document.getElementById('clearFilters');
+    const modal = document.getElementById('modal');
+    const closeModal = document.getElementById('closeModal');
+
+    let activeTag = '';
+    let query = '';
+
+    const allTags = [...new Set(data.flatMap(item => item.tags))].sort();
+
+    function renderTags() {
+      tagCloud.innerHTML = '';
+      allTags.forEach(tag => {
+        const el = document.createElement('div');
+        el.className = 'tag' + (activeTag === tag ? ' active' : '');
+        el.textContent = '#' + tag;
+        el.onclick = () => {
+          activeTag = activeTag === tag ? '' : tag;
+          renderTags();
+          renderCards();
+        };
+        tagCloud.appendChild(el);
+      });
+    }
+
+    function matches(item) {
+      const hay = [item.title, item.description, ...item.tags].join(' ').toLowerCase();
+      const q = query.trim().toLowerCase();
+      const tagOk = !activeTag || item.tags.includes(activeTag);
+      const queryOk = !q || hay.includes(q);
+      return tagOk && queryOk;
+    }
+
+    function renderCards() {
+      const filtered = data.filter(matches);
+      grid.innerHTML = '';
+
+      resultsText.textContent = `Найдено: ${filtered.length} из ${data.length}`;
+      activeFilters.textContent = [query ? `поиск: “${query}”` : '', activeTag ? `тег: #${activeTag}` : '']
+        .filter(Boolean)
+        .join(' · ');
+
+      if (!filtered.length) {
+        grid.innerHTML = '<div class="empty">Ничего не найдено. Измени запрос или сбрось фильтры.</div>';
+        return;
+      }
+
+      filtered.forEach(item => {
+        const card = document.createElement('article');
+        card.className = 'card';
+        card.innerHTML = `
+          <img class="thumb" src="${item.cover}" alt="${item.title}">
+          <div class="card-body">
+            <h3>${item.title}</h3>
+            <p>${item.description}</p>
+            <div class="chips">${item.tags.map(t => `<span class="chip">#${t}</span>`).join('')}</div>
+          </div>
+        `;
+        card.onclick = () => openModal(item);
+        grid.appendChild(card);
+      });
+    }
+
+    function openModal(item) {
+      document.getElementById('downloadBtn').href = item.download || '#';
+      document.getElementById('modalTitle').textContent = item.title;
+      document.getElementById('modalTags').textContent = item.tags.map(t => '#' + t).join('  ');
+      document.getElementById('modalDescription').textContent = item.description;
+      document.getElementById('modalHero').src = item.cover;
+
+      const fragmentList = document.getElementById('fragmentList');
+      fragmentList.innerHTML = item.fragments.map(f => `
+        <div class="fragment">
+          <img src="${f.img}" alt="Фрагмент">
+          <p>${f.text}</p>
+        </div>
+      `).join('');
+
+      modal.classList.add('open');
+    }
+
+    searchInput.addEventListener('input', (e) => {
+      query = e.target.value;
+      renderCards();
+    });
+
+    clearFilters.onclick = () => {
+      query = '';
+      activeTag = '';
+      searchInput.value = '';
+      renderTags();
+      renderCards();
+    };
+
+    closeModal.onclick = () => modal.classList.remove('open');
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) modal.classList.remove('open');
+    });
+
+    renderTags();
+    renderCards();
+  </script>
+</body>
+</html>
