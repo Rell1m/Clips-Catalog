@@ -3,186 +3,384 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Локальный каталог аниме-нарезок</title>
+  <title>Каталог клипов</title>
   <style>
     :root{
       --bg:#0b0d12;
-      --panel:#121622;
-      --panel-2:#171c2a;
+      --panel:rgba(255,255,255,.04);
+      --panel-2:rgba(255,255,255,.06);
       --text:#eef1f7;
       --muted:#a8b0c2;
       --line:rgba(255,255,255,.08);
       --accent:#7c8cff;
       --accent-2:#67d6c4;
-      --shadow:0 20px 60px rgba(0,0,0,.35);
+      --shadow:0 18px 60px rgba(0,0,0,.35);
       --radius:22px;
     }
+
     *{box-sizing:border-box}
+    html,body{height:100%}
     body{
       margin:0;
-      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-      background:
-        radial-gradient(circle at top, rgba(124,140,255,.16), transparent 28%),
-        radial-gradient(circle at right, rgba(103,214,196,.12), transparent 22%),
-        var(--bg);
       color:var(--text);
+      background:
+        radial-gradient(circle at top, rgba(124,140,255,.15), transparent 30%),
+        radial-gradient(circle at right, rgba(103,214,196,.10), transparent 22%),
+        var(--bg);
+      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
     }
-    .app{max-width:1280px; margin:0 auto; padding:28px 18px 44px;}
+
+    .app{
+      max-width:1320px;
+      margin:0 auto;
+      padding:24px 16px 40px;
+    }
+
     .topbar{
-      display:flex; gap:14px; flex-wrap:wrap; align-items:center; justify-content:space-between;
+      display:flex;
+      align-items:flex-end;
+      justify-content:space-between;
+      gap:16px;
+      flex-wrap:wrap;
       margin-bottom:18px;
     }
-    .title h1{margin:0; font-size:28px; letter-spacing:.2px}
-    .title p{margin:6px 0 0; color:var(--muted); font-size:14px}
-    .controls{
-      display:flex; gap:10px; flex-wrap:wrap; align-items:center; width:min(100%, 760px);
+
+    .hero h1{
+      margin:0;
+      font-size:30px;
+      line-height:1.1;
+      letter-spacing:.2px;
     }
+
+    .hero p{
+      margin:8px 0 0;
+      color:var(--muted);
+      font-size:14px;
+      line-height:1.5;
+      max-width:720px;
+    }
+
+    .controls{
+      display:flex;
+      gap:10px;
+      align-items:center;
+      flex:1 1 540px;
+      justify-content:flex-end;
+      flex-wrap:wrap;
+    }
+
     .search{
-      flex:1 1 280px;
-      display:flex; align-items:center; gap:10px;
+      flex:1 1 320px;
+      display:flex;
+      align-items:center;
+      gap:10px;
       padding:14px 16px;
-      background:rgba(255,255,255,.04);
       border:1px solid var(--line);
       border-radius:16px;
+      background:rgba(255,255,255,.04);
       box-shadow:var(--shadow);
       backdrop-filter: blur(10px);
     }
+
     .search input{
-      width:100%; border:0; outline:0; background:transparent; color:var(--text);
+      width:100%;
+      border:0;
+      outline:0;
+      background:transparent;
+      color:var(--text);
       font-size:15px;
     }
-    .pill-btn{
+
+    .btn{
       border:1px solid var(--line);
       background:rgba(255,255,255,.04);
       color:var(--text);
       padding:13px 14px;
       border-radius:16px;
       cursor:pointer;
-      transition:.2s ease;
+      transition:.18s ease;
+      text-decoration:none;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:8px;
+      white-space:nowrap;
     }
-    .pill-btn:hover{transform:translateY(-1px); background:rgba(255,255,255,.07)}
+
+    .btn:hover{transform:translateY(-1px); background:rgba(255,255,255,.07)}
+    .btn.primary{background:linear-gradient(135deg, rgba(124,140,255,.22), rgba(103,214,196,.16)); border-color:rgba(124,140,255,.28)}
+
     .layout{
       display:grid;
       grid-template-columns: 290px 1fr;
       gap:18px;
       align-items:start;
     }
-    .sidebar,.content,.modal-card{
-      background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.03));
+
+    .sidebar,
+    .content,
+    .modal-card{
       border:1px solid var(--line);
       border-radius:var(--radius);
+      background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.03));
       box-shadow:var(--shadow);
       backdrop-filter: blur(10px);
     }
-    .sidebar{padding:18px; position:sticky; top:18px}
-    .section-title{margin:0 0 12px; font-size:15px; color:#dfe4f2}
-    .tag-cloud{display:flex; flex-wrap:wrap; gap:8px}
-    .tag{
-      padding:8px 10px; border-radius:999px; border:1px solid var(--line);
-      background:rgba(255,255,255,.04); color:var(--text); cursor:pointer; font-size:13px;
-      user-select:none; transition:.2s ease;
+
+    .sidebar{
+      padding:18px;
+      position:sticky;
+      top:18px;
     }
+
+    .section-title{
+      margin:0 0 12px;
+      font-size:15px;
+      color:#dfe4f2;
+    }
+
+    .tag-cloud{
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+    }
+
+    .tag{
+      padding:8px 10px;
+      border-radius:999px;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.04);
+      color:var(--text);
+      cursor:pointer;
+      font-size:13px;
+      user-select:none;
+      transition:.18s ease;
+      line-height:1;
+    }
+
     .tag:hover{transform:translateY(-1px)}
     .tag.active{background:linear-gradient(135deg, rgba(124,140,255,.25), rgba(103,214,196,.18)); border-color:rgba(124,140,255,.35)}
+
     .meta-box{
-      margin-top:18px; padding:14px; border-radius:18px; background:rgba(0,0,0,.15); border:1px solid var(--line);
-      color:var(--muted); font-size:13px; line-height:1.5;
+      margin-top:18px;
+      padding:14px;
+      border-radius:18px;
+      background:rgba(0,0,0,.16);
+      border:1px solid var(--line);
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.5;
     }
+
     .content{padding:18px}
+
     .results-bar{
-      display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      flex-wrap:wrap;
       margin-bottom:14px;
     }
+
     .results-bar strong{font-size:14px}
+    .small{color:var(--muted); font-size:13px; line-height:1.5}
+
     .grid{
       display:grid;
-      grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+      grid-template-columns:repeat(auto-fill, minmax(210px, 1fr));
       gap:14px;
     }
+
     .card{
       overflow:hidden;
       border-radius:20px;
-      background:rgba(255,255,255,.04);
       border:1px solid var(--line);
+      background:rgba(255,255,255,.04);
       cursor:pointer;
-      transition:.22s ease;
+      transition:.2s ease;
+      display:flex;
+      flex-direction:column;
+      min-height:100%;
     }
+
     .card:hover{transform:translateY(-3px); border-color:rgba(124,140,255,.25)}
+
+    .thumb-wrap{
+      position:relative;
+      aspect-ratio:16/10;
+      background:linear-gradient(135deg, rgba(124,140,255,.22), rgba(103,214,196,.14));
+    }
+
     .thumb{
-      aspect-ratio: 16/10;
       width:100%;
+      height:100%;
       object-fit:cover;
       display:block;
-      background:linear-gradient(135deg, rgba(124,140,255,.22), rgba(103,214,196,.15));
     }
-    .card-body{padding:13px 13px 14px}
-    .card h3{margin:0 0 8px; font-size:16px}
+
+    .thumb-fallback{
+      position:absolute;
+      inset:0;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:18px;
+      text-align:center;
+      font-weight:700;
+      font-size:28px;
+      color:rgba(255,255,255,.92);
+      background:linear-gradient(135deg, rgba(124,140,255,.28), rgba(103,214,196,.18));
+    }
+
+    .card-body{padding:13px 13px 14px; display:flex; flex-direction:column; gap:10px; flex:1}
+    .card h3{margin:0; font-size:16px; line-height:1.25}
     .card p{margin:0; color:var(--muted); font-size:13px; line-height:1.45}
-    .chips{display:flex; flex-wrap:wrap; gap:6px; margin-top:11px}
+
+    .chips{display:flex; flex-wrap:wrap; gap:6px}
     .chip{
-      font-size:12px; color:#dce3ff; padding:5px 8px; border-radius:999px;
-      background:rgba(124,140,255,.12); border:1px solid rgba(124,140,255,.18);
+      font-size:12px;
+      color:#dce3ff;
+      padding:5px 8px;
+      border-radius:999px;
+      background:rgba(124,140,255,.12);
+      border:1px solid rgba(124,140,255,.18);
     }
+
+    .card-actions{display:flex; gap:8px; margin-top:auto; flex-wrap:wrap}
+    .card-actions .btn{padding:10px 12px; border-radius:14px; font-size:13px}
+
     .empty{
-      padding:28px; text-align:center; color:var(--muted); border:1px dashed var(--line); border-radius:20px;
+      padding:30px;
+      text-align:center;
+      color:var(--muted);
+      border:1px dashed var(--line);
+      border-radius:20px;
+      background:rgba(255,255,255,.03);
     }
+
     .modal{
-      position:fixed; inset:0; display:none; align-items:center; justify-content:center; padding:18px;
-      background:rgba(5,7,12,.72); z-index:20;
+      position:fixed;
+      inset:0;
+      display:none;
+      align-items:center;
+      justify-content:center;
+      padding:18px;
+      background:rgba(5,7,12,.74);
+      z-index:50;
     }
+
     .modal.open{display:flex}
+
     .modal-card{
       width:min(980px, 100%);
       max-height:min(90vh, 940px);
       overflow:auto;
       padding:18px;
     }
-    .modal-top{display:flex; justify-content:space-between; gap:14px; align-items:flex-start; margin-bottom:14px}
-    .modal-top h2{margin:0 0 8px; font-size:26px}
+
+    .modal-top{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:14px;
+      margin-bottom:14px;
+    }
+
+    .modal-top h2{margin:0 0 8px; font-size:26px; line-height:1.1}
+
     .close{
-      border:0; background:rgba(255,255,255,.06); color:var(--text); width:42px; height:42px; border-radius:14px; cursor:pointer;
+      border:0;
+      background:rgba(255,255,255,.06);
+      color:var(--text);
+      width:42px;
+      height:42px;
+      border-radius:14px;
+      cursor:pointer;
+      flex:0 0 auto;
     }
-    .hero{
-      width:100%; max-height:340px; object-fit:cover; border-radius:18px; border:1px solid var(--line);
-      margin-bottom:14px; background:rgba(255,255,255,.04);
+
+    .hero-img{
+      width:100%;
+      max-height:340px;
+      object-fit:cover;
+      border-radius:18px;
+      border:1px solid var(--line);
+      margin-bottom:14px;
+      background:rgba(255,255,255,.04);
     }
-    .detail-grid{display:grid; grid-template-columns: 1.2fr .8fr; gap:14px}
-    .panel{background:rgba(0,0,0,.14); border:1px solid var(--line); border-radius:18px; padding:14px}
+
+    .detail-grid{
+      display:grid;
+      grid-template-columns:1.2fr .8fr;
+      gap:14px;
+    }
+
+    .panel{
+      background:rgba(0,0,0,.16);
+      border:1px solid var(--line);
+      border-radius:18px;
+      padding:14px;
+    }
+
     .panel h4{margin:0 0 10px; font-size:14px}
+
     .fragments{display:grid; gap:10px}
+
     .fragment{
-      display:grid; grid-template-columns: 120px 1fr; gap:12px; align-items:start;
-      padding:10px; border-radius:16px; background:rgba(255,255,255,.04); border:1px solid var(--line);
+      display:grid;
+      grid-template-columns:120px 1fr;
+      gap:12px;
+      align-items:start;
+      padding:10px;
+      border-radius:16px;
+      background:rgba(255,255,255,.04);
+      border:1px solid var(--line);
     }
-    .fragment img{width:120px; height:72px; object-fit:cover; border-radius:12px}
+
+    .fragment img{
+      width:120px;
+      height:72px;
+      object-fit:cover;
+      border-radius:12px;
+      background:rgba(255,255,255,.04);
+    }
+
     .fragment p{margin:0; color:var(--muted); font-size:13px; line-height:1.5}
-    .small{color:var(--muted); font-size:13px; line-height:1.6}
-    .footer-note{margin-top:12px; color:var(--muted); font-size:12px}
-    @media (max-width: 960px){
+
+    .modal-actions{display:flex; gap:10px; flex-wrap:wrap}
+
+    @media (max-width:960px){
       .layout{grid-template-columns:1fr}
       .sidebar{position:relative; top:0}
       .detail-grid{grid-template-columns:1fr}
     }
-    @media (max-width: 560px){
+
+    @media (max-width:560px){
       .grid{grid-template-columns:1fr 1fr}
       .fragment{grid-template-columns:1fr}
       .fragment img{width:100%; height:170px}
+    }
+
+    @media (max-width:420px){
+      .grid{grid-template-columns:1fr}
+      .hero h1{font-size:26px}
     }
   </style>
 </head>
 <body>
   <div class="app">
     <div class="topbar">
-      <div class="title">
-        <h1>Каталог нарезок</h1>
-        <p>Локальный сайт для аниме и фильмов: поиск, теги, карточки, подробный просмотр.</p>
+      <div class="hero">
+        <h1>Каталог клипов</h1>
+        <p>Минималистичный каталог для аниме и фильмов с поиском, множественными тегами, карточками, подробным просмотром и кнопкой скачивания.</p>
       </div>
       <div class="controls">
         <div class="search">
           <span>⌕</span>
           <input id="searchInput" type="text" placeholder="Поиск по названию, описанию или тегам..." />
         </div>
-        <button class="pill-btn" id="clearFilters">Сбросить фильтры</button>
+        <button class="btn" id="clearFilters">Сбросить</button>
       </div>
     </div>
 
@@ -191,8 +389,7 @@
         <h3 class="section-title">Теги</h3>
         <div class="tag-cloud" id="tagCloud"></div>
         <div class="meta-box">
-          <strong style="color:var(--text)">Как хранить данные</strong><br>
-          Каждая запись может содержать: название, описание, теги, обложку и список фрагментов. Потом это легко перенести в JSON или базу.
+          Выбирай несколько тегов сразу. В фильтре показываются только карточки, где совпадают все выбранные теги.
         </div>
       </aside>
 
@@ -215,22 +412,23 @@
         </div>
         <button class="close" id="closeModal">✕</button>
       </div>
-      <img class="hero" id="modalHero" alt="Обложка" />
+
+      <img class="hero-img" id="modalHero" alt="Обложка" />
+
       <div class="detail-grid">
         <section class="panel">
           <h4>Описание</h4>
           <div class="small" id="modalDescription"></div>
         </section>
         <section class="panel">
-          <h4>Фильтры</h4>
-          <div class="small">Можно искать по жанрам, стилю и настроению. Например: <b>#cyberpunk</b>, <b>#sad</b>, <b>#romance</b>.</div>
+          <h4>Ссылки</h4>
+          <div class="modal-actions">
+            <a id="downloadBtn" class="btn primary" href="#" target="_blank" rel="noopener">Скачать</a>
+          </div>
         </section>
       </div>
+
       <section class="panel" style="margin-top:14px">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px">
-          <h4 style="margin:0">Фрагменты</h4>
-          <a id="downloadBtn" href="#" download class="pill-btn" style="text-decoration:none">⬇ Скачать</a>
-        </div>
         <h4>Фрагменты</h4>
         <div class="fragments" id="fragmentList"></div>
       </section>
@@ -238,49 +436,53 @@
   </div>
 
   <script>
-    // Edit this array to add your own anime / movies.
-    // Recommended fields:
-    // title: string
-    // description: string
-    // tags: array of strings
-    // cover: image URL or local path
-    // download: download URL or local file path
-    // fragments: array of { img, text }
     const data = [
       {
         id: 1,
-        title: 'Cyber City Run',
-        description: 'Ночной город, неон, быстрый монтаж и напряжённая атмосфера.',
-        tags: ['cyberpunk', 'night', 'action', 'neo-noir'],
-        cover: 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=1200&q=80',
+        title: 'Naruto',
+        description: 'Экшен, эмоции и сильные сцены для динамичных нарезок.',
+        tags: ['action', 'shonen', 'adventure'],
+        cover: '',
         download: '#',
         fragments: [
-          { img: 'https://images.unsplash.com/photo-1508341591423-4347099e1f19?auto=format&fit=crop&w=800&q=80', text: 'Фрагмент с движением камеры и ярким светом.' },
-          { img: 'https://images.unsplash.com/photo-1516035069371-29a1b244cc32?auto=format&fit=crop&w=800&q=80', text: 'Сцена с сильным контрастом и динамикой.' }
+          { img: '', text: 'Фрагмент для удара или разгона сцены.' },
+          { img: '', text: 'Эмоциональный момент под лирический переход.' }
         ]
       },
       {
         id: 2,
-        title: 'Silent Rain',
-        description: 'Медленный, грустный вайб с упором на эмоции и атмосферу.',
-        tags: ['sad', 'romance', 'melancholy', 'drama'],
-        cover: 'https://images.unsplash.com/photo-1493246507139-91e8fad9978e?auto=format&fit=crop&w=1200&q=80',
+        title: 'Death Note',
+        description: 'Тёмная атмосфера, напряжение и интеллектуальный вайб.',
+        tags: ['dark', 'thriller', 'psychological'],
+        cover: '',
         download: '#',
         fragments: [
-          { img: 'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=800&q=80', text: 'Тихий фрагмент с дождём и мягким светом.' },
-          { img: 'https://images.unsplash.com/photo-1516280030429-bf2e4f1bc5a7?auto=format&fit=crop&w=800&q=80', text: 'Сцена для лирического перехода.' }
+          { img: '', text: 'Кадр для напряжённой паузы.' },
+          { img: '', text: 'Сцена для мрачного акцента.' }
         ]
       },
       {
         id: 3,
-        title: 'Blade Motion',
-        description: 'Жёсткий экшен, резкие движения, идеально для сильного темпа.',
-        tags: ['action', 'fast', 'fight', 'shonen'],
-        cover: 'https://images.unsplash.com/photo-1485846234645-a62644f84728?auto=format&fit=crop&w=1200&q=80',
+        title: 'Attack on Titan',
+        description: 'Масштаб, драматизм и жёсткий экшен.',
+        tags: ['action', 'dark', 'epic'],
+        cover: '',
         download: '#',
         fragments: [
-          { img: 'https://images.unsplash.com/photo-1511884642898-4c92249e20b6?auto=format&fit=crop&w=800&q=80', text: 'Кадр под удар/хит-поинт.' },
-          { img: 'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&w=800&q=80', text: 'Кадр для резкого акцента.' }
+          { img: '', text: 'Сцена под мощный бит.' },
+          { img: '', text: 'Кадр для драматичного момента.' }
+        ]
+      },
+      {
+        id: 4,
+        title: 'Jujutsu Kaisen',
+        description: 'Быстрый экшен, стиль и энергичный монтаж.',
+        tags: ['action', 'supernatural', 'fast'],
+        cover: '',
+        download: '#',
+        fragments: [
+          { img: '', text: 'Фрагмент под быстрый переход.' },
+          { img: '', text: 'Кадр под эффектный hit.' }
         ]
       }
     ];
@@ -293,19 +495,51 @@
     const clearFilters = document.getElementById('clearFilters');
     const modal = document.getElementById('modal');
     const closeModal = document.getElementById('closeModal');
+    const modalTitle = document.getElementById('modalTitle');
+    const modalTags = document.getElementById('modalTags');
+    const modalDescription = document.getElementById('modalDescription');
+    const modalHero = document.getElementById('modalHero');
+    const modalDownload = document.getElementById('downloadBtn');
+    const fragmentList = document.getElementById('fragmentList');
 
     let selectedTags = [];
     let query = '';
 
-    const allTags = [...new Set(data.flatMap(item => item.tags))].sort();
+    const allTags = [...new Set(data.flatMap(item => Array.isArray(item.tags) ? item.tags : []))].sort((a, b) => a.localeCompare(b, 'ru'));
+
+    function placeholder(title, seed) {
+      const letter = (title || '?').trim().slice(0, 1).toUpperCase();
+      const bg1 = ['#7c8cff', '#67d6c4', '#ff7aa2', '#f3a65a', '#8d6cff'][seed % 5];
+      const bg2 = ['#121622', '#0f1420', '#14111c', '#151824', '#10151f'][(seed + 2) % 5];
+      const svg = `
+        <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="750" viewBox="0 0 1200 750">
+          <defs>
+            <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="${bg1}" stop-opacity="0.95" />
+              <stop offset="100%" stop-color="${bg2}" stop-opacity="1" />
+            </linearGradient>
+          </defs>
+          <rect width="1200" height="750" rx="48" fill="url(#g)" />
+          <circle cx="980" cy="120" r="220" fill="rgba(255,255,255,0.07)" />
+          <circle cx="220" cy="620" r="260" fill="rgba(255,255,255,0.05)" />
+          <text x="80" y="620" fill="white" font-size="280" font-family="Arial, sans-serif" font-weight="700">${letter}</text>
+        </svg>
+      `;
+      return 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(svg);
+    }
 
     function renderTags() {
       tagCloud.innerHTML = '';
+      if (allTags.length === 0) {
+        tagCloud.innerHTML = '<div class="small">Теги не добавлены</div>';
+        return;
+      }
       allTags.forEach(tag => {
-        const el = document.createElement('div');
+        const el = document.createElement('button');
+        el.type = 'button';
         el.className = 'tag' + (selectedTags.includes(tag) ? ' active' : '');
         el.textContent = '#' + tag;
-        el.onclick = () => {
+        el.addEventListener('click', () => {
           if (selectedTags.includes(tag)) {
             selectedTags = selectedTags.filter(t => t !== tag);
           } else {
@@ -313,16 +547,19 @@
           }
           renderTags();
           renderCards();
-        };
+        });
         tagCloud.appendChild(el);
       });
     }
 
     function matches(item) {
-      const hay = [item.title, item.description, ...item.tags].join(' ').toLowerCase();
+      const title = String(item.title || '').toLowerCase();
+      const description = String(item.description || '').toLowerCase();
+      const tags = Array.isArray(item.tags) ? item.tags : [];
+      const hay = [title, description, ...tags].join(' ');
       const q = query.trim().toLowerCase();
       const queryOk = !q || hay.includes(q);
-      const tagsOk = selectedTags.length === 0 || selectedTags.every(tag => item.tags.includes(tag));
+      const tagsOk = selectedTags.length === 0 || selectedTags.every(tag => tags.includes(tag));
       return queryOk && tagsOk;
     }
 
@@ -344,35 +581,132 @@
       filtered.forEach(item => {
         const card = document.createElement('article');
         card.className = 'card';
-        card.innerHTML = `
-          <img class="thumb" src="${item.cover}" alt="${item.title}">
-          <div class="card-body">
-            <h3>${item.title}</h3>
-            <p>${item.description}</p>
-            <div class="chips">${item.tags.map(t => `<span class="chip">#${t}</span>`).join('')}</div>
-          </div>
-        `;
-        card.onclick = () => openModal(item);
+
+        const wrap = document.createElement('div');
+        wrap.className = 'thumb-wrap';
+
+        const img = document.createElement('img');
+        img.className = 'thumb';
+        img.alt = item.title || 'Обложка';
+        img.src = item.cover || placeholder(item.title, item.id || 0);
+        img.addEventListener('error', () => {
+          img.onerror = null;
+          img.src = placeholder(item.title, item.id || 0);
+        });
+
+        wrap.appendChild(img);
+
+        const body = document.createElement('div');
+        body.className = 'card-body';
+
+        const h3 = document.createElement('h3');
+        h3.textContent = item.title || 'Без названия';
+
+        const p = document.createElement('p');
+        p.textContent = item.description || 'Описание не добавлено.';
+
+        const chips = document.createElement('div');
+        chips.className = 'chips';
+        (Array.isArray(item.tags) ? item.tags : []).forEach(tag => {
+          const chip = document.createElement('span');
+          chip.className = 'chip';
+          chip.textContent = '#' + tag;
+          chips.appendChild(chip);
+        });
+
+        const actions = document.createElement('div');
+        actions.className = 'card-actions';
+
+        const openBtn = document.createElement('button');
+        openBtn.type = 'button';
+        openBtn.className = 'btn';
+        openBtn.textContent = 'Открыть';
+        openBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          openModal(item);
+        });
+
+        const downloadBtn = document.createElement('a');
+        downloadBtn.className = 'btn primary';
+        downloadBtn.textContent = 'Скачать';
+        downloadBtn.href = item.download || '#';
+        downloadBtn.target = '_blank';
+        downloadBtn.rel = 'noopener';
+        if (!item.download || item.download === '#') {
+          downloadBtn.setAttribute('aria-disabled', 'true');
+          downloadBtn.addEventListener('click', (e) => e.preventDefault());
+        }
+
+        actions.appendChild(openBtn);
+        actions.appendChild(downloadBtn);
+
+        body.appendChild(h3);
+        body.appendChild(p);
+        body.appendChild(chips);
+        body.appendChild(actions);
+
+        card.appendChild(wrap);
+        card.appendChild(body);
+        card.addEventListener('click', () => openModal(item));
+
         grid.appendChild(card);
       });
     }
 
     function openModal(item) {
-      document.getElementById('modalTitle').textContent = item.title;
-      document.getElementById('modalTags').textContent = item.tags.map(t => '#' + t).join('  ');
-      document.getElementById('modalDescription').textContent = item.description;
-      document.getElementById('modalHero').src = item.cover;
-      document.getElementById('downloadBtn').href = item.download || '#';
+      modalTitle.textContent = item.title || 'Без названия';
+      modalTags.textContent = (Array.isArray(item.tags) ? item.tags : []).map(t => '#' + t).join('  ');
+      modalDescription.textContent = item.description || 'Описание не добавлено.';
+      modalHero.src = item.cover || placeholder(item.title, item.id || 0);
+      modalDownload.href = item.download || '#';
+      modalDownload.target = '_blank';
+      modalDownload.rel = 'noopener';
+      if (!item.download || item.download === '#') {
+        modalDownload.setAttribute('aria-disabled', 'true');
+        modalDownload.addEventListener('click', function preventOnce(e) {
+          e.preventDefault();
+          modalDownload.removeEventListener('click', preventOnce);
+        }, { once: true });
+      }
 
-      const fragmentList = document.getElementById('fragmentList');
-      fragmentList.innerHTML = item.fragments.map(f => `
-        <div class="fragment">
-          <img src="${f.img}" alt="Фрагмент">
-          <p>${f.text}</p>
-        </div>
-      `).join('');
+      fragmentList.innerHTML = '';
+      const fragments = Array.isArray(item.fragments) ? item.fragments : [];
+      if (fragments.length === 0) {
+        const empty = document.createElement('div');
+        empty.className = 'small';
+        empty.textContent = 'Фрагменты не добавлены.';
+        fragmentList.appendChild(empty);
+      } else {
+        fragments.forEach((frag, index) => {
+          const row = document.createElement('div');
+          row.className = 'fragment';
+
+          const img = document.createElement('img');
+          img.alt = 'Фрагмент';
+          img.src = frag.img || placeholder(`${item.title} ${index + 1}`, (item.id || 0) + index + 1);
+          img.addEventListener('error', () => {
+            img.onerror = null;
+            img.src = placeholder(`${item.title} ${index + 1}`, (item.id || 0) + index + 1);
+          });
+
+          const text = document.createElement('p');
+          text.textContent = frag.text || 'Описание фрагмента не добавлено.';
+
+          row.appendChild(img);
+          row.appendChild(text);
+          fragmentList.appendChild(row);
+        });
+      }
 
       modal.classList.add('open');
+    }
+
+    function resetFilters() {
+      query = '';
+      selectedTags = [];
+      searchInput.value = '';
+      renderTags();
+      renderCards();
     }
 
     searchInput.addEventListener('input', (e) => {
@@ -380,17 +714,13 @@
       renderCards();
     });
 
-    clearFilters.onclick = () => {
-      query = '';
-      selectedTags = [];
-      searchInput.value = '';
-      renderTags();
-      renderCards();
-    };
-
-    closeModal.onclick = () => modal.classList.remove('open');
+    clearFilters.addEventListener('click', resetFilters);
+    closeModal.addEventListener('click', () => modal.classList.remove('open'));
     modal.addEventListener('click', (e) => {
       if (e.target === modal) modal.classList.remove('open');
+    });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') modal.classList.remove('open');
     });
 
     renderTags();
