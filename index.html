@@ -8,7 +8,6 @@
     :root{
       --bg:#0b0d12;
       --panel:rgba(255,255,255,.04);
-      --panel-2:rgba(255,255,255,.06);
       --text:#eef1f7;
       --muted:#a8b0c2;
       --line:rgba(255,255,255,.08);
@@ -17,7 +16,6 @@
       --shadow:0 18px 60px rgba(0,0,0,.35);
       --radius:22px;
     }
-
     *{box-sizing:border-box}
     html,body{height:100%}
     body{
@@ -29,46 +27,22 @@
         var(--bg);
       font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
     }
-
-    .app{
-      max-width:1320px;
-      margin:0 auto;
-      padding:24px 16px 40px;
+    .app{max-width:1320px;margin:0 auto;padding:24px 16px 40px}
+    .topbar{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:18px}
+    .hero h1{margin:0;font-size:30px;line-height:1.1;letter-spacing:.2px}
+    .controls{display:flex;gap:10px;align-items:center;flex:1 1 540px;justify-content:flex-end;flex-wrap:wrap}
+    .tabs{display:flex;gap:8px;flex-wrap:wrap}
+    .tab{
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.04);
+      color:var(--text);
+      padding:11px 14px;
+      border-radius:14px;
+      cursor:pointer;
+      transition:.18s ease;
     }
-
-    .topbar{
-      display:flex;
-      align-items:flex-end;
-      justify-content:space-between;
-      gap:16px;
-      flex-wrap:wrap;
-      margin-bottom:18px;
-    }
-
-    .hero h1{
-      margin:0;
-      font-size:30px;
-      line-height:1.1;
-      letter-spacing:.2px;
-    }
-
-    .hero p{
-      margin:8px 0 0;
-      color:var(--muted);
-      font-size:14px;
-      line-height:1.5;
-      max-width:720px;
-    }
-
-    .controls{
-      display:flex;
-      gap:10px;
-      align-items:center;
-      flex:1 1 540px;
-      justify-content:flex-end;
-      flex-wrap:wrap;
-    }
-
+    .tab:hover{transform:translateY(-1px); background:rgba(255,255,255,.07)}
+    .tab.active{background:linear-gradient(135deg, rgba(124,140,255,.25), rgba(103,214,196,.18)); border-color:rgba(124,140,255,.35)}
     .search{
       flex:1 1 320px;
       display:flex;
@@ -81,16 +55,7 @@
       box-shadow:var(--shadow);
       backdrop-filter: blur(10px);
     }
-
-    .search input{
-      width:100%;
-      border:0;
-      outline:0;
-      background:transparent;
-      color:var(--text);
-      font-size:15px;
-    }
-
+    .search input{width:100%;border:0;outline:0;background:transparent;color:var(--text);font-size:15px}
     .btn{
       border:1px solid var(--line);
       background:rgba(255,255,255,.04);
@@ -106,45 +71,13 @@
       gap:8px;
       white-space:nowrap;
     }
-
     .btn:hover{transform:translateY(-1px); background:rgba(255,255,255,.07)}
     .btn.primary{background:linear-gradient(135deg, rgba(124,140,255,.22), rgba(103,214,196,.16)); border-color:rgba(124,140,255,.28)}
-
-    .layout{
-      display:grid;
-      grid-template-columns: 290px 1fr;
-      gap:18px;
-      align-items:start;
-    }
-
-    .sidebar,
-    .content,
-    .modal-card{
-      border:1px solid var(--line);
-      border-radius:var(--radius);
-      background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.03));
-      box-shadow:var(--shadow);
-      backdrop-filter: blur(10px);
-    }
-
-    .sidebar{
-      padding:18px;
-      position:sticky;
-      top:18px;
-    }
-
-    .section-title{
-      margin:0 0 12px;
-      font-size:15px;
-      color:#dfe4f2;
-    }
-
-    .tag-cloud{
-      display:flex;
-      flex-wrap:wrap;
-      gap:8px;
-    }
-
+    .layout{display:grid;grid-template-columns:290px 1fr;gap:18px;align-items:start}
+    .sidebar,.content,.modal-card,.viewer-card{border:1px solid var(--line);border-radius:var(--radius);background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.03));box-shadow:var(--shadow);backdrop-filter: blur(10px)}
+    .sidebar{padding:18px;position:sticky;top:18px}
+    .section-title{margin:0 0 12px;font-size:15px;color:#dfe4f2}
+    .tag-cloud{display:flex;flex-wrap:wrap;gap:8px}
     .tag{
       padding:8px 10px;
       border-radius:999px;
@@ -157,176 +90,35 @@
       transition:.18s ease;
       line-height:1;
     }
-
     .tag:hover{transform:translateY(-1px)}
     .tag.active{background:linear-gradient(135deg, rgba(124,140,255,.25), rgba(103,214,196,.18)); border-color:rgba(124,140,255,.35)}
-
-    .meta-box{
-      margin-top:18px;
-      padding:14px;
-      border-radius:18px;
-      background:rgba(0,0,0,.16);
-      border:1px solid var(--line);
-      color:var(--muted);
-      font-size:13px;
-      line-height:1.5;
-    }
-
     .content{padding:18px}
-
-    .results-bar{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:12px;
-      flex-wrap:wrap;
-      margin-bottom:14px;
-    }
-
-    .results-bar strong{font-size:14px}
-    .small{color:var(--muted); font-size:13px; line-height:1.5}
-
-    .grid{
-      display:grid;
-      grid-template-columns:repeat(auto-fill, minmax(210px, 1fr));
-      gap:14px;
-    }
-
-    .card{
-      overflow:hidden;
-      border-radius:20px;
-      border:1px solid var(--line);
-      background:rgba(255,255,255,.04);
-      cursor:pointer;
-      transition:.2s ease;
-      display:flex;
-      flex-direction:column;
-      min-height:100%;
-    }
-
+    .results-bar{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+    .small{color:var(--muted);font-size:13px;line-height:1.5}
+    .grid{display:grid;grid-template-columns:repeat(auto-fill, minmax(210px, 1fr));gap:14px}
+    .card{overflow:hidden;border-radius:20px;border:1px solid var(--line);background:rgba(255,255,255,.04);cursor:pointer;transition:.2s ease;display:flex;flex-direction:column;min-height:100%}
     .card:hover{transform:translateY(-3px); border-color:rgba(124,140,255,.25)}
-
-    .thumb-wrap{
-      position:relative;
-      aspect-ratio:16/10;
-      background:linear-gradient(135deg, rgba(124,140,255,.22), rgba(103,214,196,.14));
-    }
-
-    .thumb{
-      width:100%;
-      height:100%;
-      object-fit:cover;
-      display:block;
-    }
-
-    .thumb-fallback{
-      position:absolute;
-      inset:0;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      padding:18px;
-      text-align:center;
-      font-weight:700;
-      font-size:28px;
-      color:rgba(255,255,255,.92);
-      background:linear-gradient(135deg, rgba(124,140,255,.28), rgba(103,214,196,.18));
-    }
-
-    .card-body{padding:13px 13px 14px; display:flex; flex-direction:column; gap:10px; flex:1}
-    .card h3{margin:0; font-size:16px; line-height:1.25}
-    .card p{margin:0; color:var(--muted); font-size:13px; line-height:1.45}
-
-    .chips{display:flex; flex-wrap:wrap; gap:6px}
-    .chip{
-      font-size:12px;
-      color:#dce3ff;
-      padding:5px 8px;
-      border-radius:999px;
-      background:rgba(124,140,255,.12);
-      border:1px solid rgba(124,140,255,.18);
-    }
-
-    .card-actions{display:flex; gap:8px; margin-top:auto; flex-wrap:wrap}
-    .card-actions .btn{padding:10px 12px; border-radius:14px; font-size:13px}
-
-    .empty{
-      padding:30px;
-      text-align:center;
-      color:var(--muted);
-      border:1px dashed var(--line);
-      border-radius:20px;
-      background:rgba(255,255,255,.03);
-    }
-
-    .modal{
-      position:fixed;
-      inset:0;
-      display:none;
-      align-items:center;
-      justify-content:center;
-      padding:18px;
-      background:rgba(5,7,12,.74);
-      z-index:50;
-    }
-
-    .modal.open{display:flex}
-
-    .modal-card{
-      width:min(980px, 100%);
-      max-height:min(90vh, 940px);
-      overflow:auto;
-      padding:18px;
-    }
-
-    .modal-top{
-      display:flex;
-      align-items:flex-start;
-      justify-content:space-between;
-      gap:14px;
-      margin-bottom:14px;
-    }
-
-    .modal-top h2{margin:0 0 8px; font-size:26px; line-height:1.1}
-
-    .close{
-      border:0;
-      background:rgba(255,255,255,.06);
-      color:var(--text);
-      width:42px;
-      height:42px;
-      border-radius:14px;
-      cursor:pointer;
-      flex:0 0 auto;
-    }
-
-    .hero-img{
-      width:100%;
-      max-height:340px;
-      object-fit:cover;
-      border-radius:18px;
-      border:1px solid var(--line);
-      margin-bottom:14px;
-      background:rgba(255,255,255,.04);
-    }
-
-    .detail-grid{
-      display:grid;
-      grid-template-columns:1.2fr .8fr;
-      gap:14px;
-    }
-
-    .panel{
-      background:rgba(0,0,0,.16);
-      border:1px solid var(--line);
-      border-radius:18px;
-      padding:14px;
-    }
-
-    .panel h4{margin:0 0 10px; font-size:14px}
-
-    .fragments{display:grid; gap:10px}
-
+    .thumb-wrap{position:relative;aspect-ratio:16/10;background:linear-gradient(135deg, rgba(124,140,255,.22), rgba(103,214,196,.14))}
+    .thumb{width:100%;height:100%;object-fit:cover;display:block}
+    .card-body{padding:13px 13px 14px;display:flex;flex-direction:column;gap:10px;flex:1}
+    .card h3{margin:0;font-size:16px;line-height:1.25}
+    .card p{margin:0;color:var(--muted);font-size:13px;line-height:1.45}
+    .chips{display:flex;flex-wrap:wrap;gap:6px}
+    .chip{font-size:12px;color:#dce3ff;padding:5px 8px;border-radius:999px;background:rgba(124,140,255,.12);border:1px solid rgba(124,140,255,.18)}
+    .card-actions{display:flex;gap:8px;margin-top:auto;flex-wrap:wrap}
+    .card-actions .btn{padding:10px 12px;border-radius:14px;font-size:13px}
+    .empty{padding:30px;text-align:center;color:var(--muted);border:1px dashed var(--line);border-radius:20px;background:rgba(255,255,255,.03)}
+    .modal,.viewer{position:fixed;inset:0;display:none;align-items:center;justify-content:center;padding:18px;background:rgba(5,7,12,.74);z-index:50}
+    .modal.open,.viewer.open{display:flex}
+    .modal-card{width:min(980px, 100%);max-height:min(90vh, 940px);overflow:auto;padding:18px}
+    .modal-top{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;margin-bottom:14px}
+    .modal-top h2{margin:0 0 8px;font-size:26px;line-height:1.1}
+    .close{border:0;background:rgba(255,255,255,.06);color:var(--text);width:42px;height:42px;border-radius:14px;cursor:pointer;flex:0 0 auto}
+    .hero-img{width:100%;max-height:340px;object-fit:cover;border-radius:18px;border:1px solid var(--line);margin-bottom:14px;background:rgba(255,255,255,.04)}
+    .detail-grid{display:grid;grid-template-columns:1.2fr .8fr;gap:14px}
+    .panel{background:rgba(0,0,0,.16);border:1px solid var(--line);border-radius:18px;padding:14px}
+    .panel h4{margin:0 0 10px;font-size:14px}
+    .fragments{display:grid;gap:10px}
     .fragment{
       display:grid;
       grid-template-columns:120px 1fr;
@@ -336,46 +128,30 @@
       border-radius:16px;
       background:rgba(255,255,255,.04);
       border:1px solid var(--line);
+      cursor:pointer;
+      transition:.18s ease;
     }
-
-    .fragment img{
-      width:120px;
-      height:72px;
-      object-fit:cover;
-      border-radius:12px;
-      background:rgba(255,255,255,.04);
-    }
-
-    .fragment p{margin:0; color:var(--muted); font-size:13px; line-height:1.5}
-
-    .modal-actions{display:flex; gap:10px; flex-wrap:wrap}
-
-    @media (max-width:960px){
-      .layout{grid-template-columns:1fr}
-      .sidebar{position:relative; top:0}
-      .detail-grid{grid-template-columns:1fr}
-    }
-
-    @media (max-width:560px){
-      .grid{grid-template-columns:1fr 1fr}
-      .fragment{grid-template-columns:1fr}
-      .fragment img{width:100%; height:170px}
-    }
-
-    @media (max-width:420px){
-      .grid{grid-template-columns:1fr}
-      .hero h1{font-size:26px}
-    }
+    .fragment:hover{transform:translateY(-1px); border-color:rgba(124,140,255,.22)}
+    .fragment img{width:120px;height:72px;object-fit:cover;border-radius:12px;background:rgba(255,255,255,.04)}
+    .fragment p{margin:0;color:var(--muted);font-size:13px;line-height:1.5}
+    .modal-actions{display:flex;gap:10px;flex-wrap:wrap}
+    .viewer-card{width:min(1100px, 100%);max-height:min(92vh, 980px);overflow:hidden;padding:14px;display:flex;flex-direction:column;gap:12px}
+    .viewer-card img{width:100%;max-height:82vh;object-fit:contain;background:#000;border-radius:18px}
+    .viewer-bar{display:flex;justify-content:space-between;align-items:center;gap:12px}
+    @media (max-width:960px){.layout{grid-template-columns:1fr}.sidebar{position:relative;top:0}.detail-grid{grid-template-columns:1fr}}
+    @media (max-width:560px){.grid{grid-template-columns:1fr 1fr}.fragment{grid-template-columns:1fr}.fragment img{width:100%;height:170px}}
+    @media (max-width:420px){.grid{grid-template-columns:1fr}.hero h1{font-size:26px}}
   </style>
 </head>
 <body>
   <div class="app">
     <div class="topbar">
-      <div class="hero">
-        <h1>Каталог клипов</h1>
-        <p>Минималистичный каталог для аниме и фильмов с поиском, множественными тегами, карточками, подробным просмотром и кнопкой скачивания.</p>
-      </div>
+      <div class="hero"><h1>Каталог клипов</h1></div>
       <div class="controls">
+        <div class="tabs">
+          <button class="tab active" data-type="anime">Аниме</button>
+          <button class="tab" data-type="movie">Фильмы</button>
+        </div>
         <div class="search">
           <span>⌕</span>
           <input id="searchInput" type="text" placeholder="Поиск по названию, описанию или тегам..." />
@@ -388,7 +164,7 @@
       <aside class="sidebar">
         <h3 class="section-title">Теги</h3>
         <div class="tag-cloud" id="tagCloud"></div>
-        <div class="meta-box">
+        <div class="meta-box" style="margin-top:18px;padding:14px;border-radius:18px;background:rgba(0,0,0,.16);border:1px solid var(--line);color:var(--muted);font-size:13px;line-height:1.5">
           Выбирай несколько тегов сразу. В фильтре показываются только карточки, где совпадают все выбранные теги.
         </div>
       </aside>
@@ -421,7 +197,7 @@
           <div class="small" id="modalDescription"></div>
         </section>
         <section class="panel">
-          <h4>Ссылки</h4>
+          <h4>Скачать</h4>
           <div class="modal-actions">
             <a id="downloadBtn" class="btn primary" href="#" target="_blank" rel="noopener">Скачать</a>
           </div>
@@ -435,11 +211,22 @@
     </div>
   </div>
 
+  <div class="viewer" id="viewer">
+    <div class="viewer-card">
+      <div class="viewer-bar">
+        <strong id="viewerTitle">Просмотр изображения</strong>
+        <button class="close" id="closeViewer">✕</button>
+      </div>
+      <img id="viewerImg" alt="Просмотр" />
+    </div>
+  </div>
+
   <script>
     const data = [
       {
         id: 1,
         title: 'Naruto',
+        type: 'anime',
         description: 'Экшен, эмоции и сильные сцены для динамичных нарезок.',
         tags: ['action', 'shonen', 'adventure'],
         cover: '',
@@ -452,6 +239,7 @@
       {
         id: 2,
         title: 'Death Note',
+        type: 'anime',
         description: 'Тёмная атмосфера, напряжение и интеллектуальный вайб.',
         tags: ['dark', 'thriller', 'psychological'],
         cover: 'https://m.media-amazon.com/images/M/MV5BYTgyZDhmMTEtZDFhNi00MTc4LTg3NjUtYWJlNGE5Mzk2NzMxXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg',
@@ -464,6 +252,7 @@
       {
         id: 3,
         title: 'Attack on Titan',
+        type: 'anime',
         description: 'Масштаб, драматизм и жёсткий экшен.',
         tags: ['action', 'dark', 'epic'],
         cover: '',
@@ -476,6 +265,7 @@
       {
         id: 4,
         title: 'Jujutsu Kaisen',
+        type: 'anime',
         description: 'Быстрый экшен, стиль и энергичный монтаж.',
         tags: ['action', 'supernatural', 'fast'],
         cover: '',
@@ -483,6 +273,19 @@
         fragments: [
           { img: '', text: 'Фрагмент под быстрый переход.' },
           { img: '', text: 'Кадр под эффектный hit.' }
+        ]
+      },
+      {
+        id: 5,
+        title: 'Inception',
+        type: 'movie',
+        description: 'Фильм для темных и умных монтажей.',
+        tags: ['mind', 'thriller', 'epic'],
+        cover: '',
+        download: '#',
+        fragments: [
+          { img: '', text: 'Фрагмент для тревожного темпа.' },
+          { img: '', text: 'Сцена под мощный переход.' }
         ]
       }
     ];
@@ -501,11 +304,20 @@
     const modalHero = document.getElementById('modalHero');
     const modalDownload = document.getElementById('downloadBtn');
     const fragmentList = document.getElementById('fragmentList');
+    const viewer = document.getElementById('viewer');
+    const viewerImg = document.getElementById('viewerImg');
+    const viewerTitle = document.getElementById('viewerTitle');
+    const closeViewer = document.getElementById('closeViewer');
 
+    let currentType = 'anime';
     let selectedTags = [];
     let query = '';
 
-    const allTags = [...new Set(data.flatMap(item => Array.isArray(item.tags) ? item.tags : []))].sort((a, b) => a.localeCompare(b, 'ru'));
+    const allTags = () => [...new Set(
+      data
+        .filter(item => item.type === currentType)
+        .flatMap(item => Array.isArray(item.tags) ? item.tags : [])
+    )].sort((a, b) => a.localeCompare(b, 'ru'));
 
     function placeholder(title, seed) {
       const letter = (title || '?').trim().slice(0, 1).toUpperCase();
@@ -530,21 +342,20 @@
 
     function renderTags() {
       tagCloud.innerHTML = '';
-      if (allTags.length === 0) {
+      const tags = allTags();
+      if (tags.length === 0) {
         tagCloud.innerHTML = '<div class="small">Теги не добавлены</div>';
         return;
       }
-      allTags.forEach(tag => {
+      tags.forEach(tag => {
         const el = document.createElement('button');
         el.type = 'button';
         el.className = 'tag' + (selectedTags.includes(tag) ? ' active' : '');
         el.textContent = '#' + tag;
         el.addEventListener('click', () => {
-          if (selectedTags.includes(tag)) {
-            selectedTags = selectedTags.filter(t => t !== tag);
-          } else {
-            selectedTags = [...selectedTags, tag];
-          }
+          selectedTags = selectedTags.includes(tag)
+            ? selectedTags.filter(t => t !== tag)
+            : [...selectedTags, tag];
           renderTags();
           renderCards();
         });
@@ -560,15 +371,14 @@
       const q = query.trim().toLowerCase();
       const queryOk = !q || hay.includes(q);
       const tagsOk = selectedTags.length === 0 || selectedTags.every(tag => tags.includes(tag));
-      return queryOk && tagsOk;
+      return item.type === currentType && queryOk && tagsOk;
     }
 
     function renderCards() {
       const filtered = data.filter(matches);
       grid.innerHTML = '';
-
-      resultsText.textContent = `Найдено: ${filtered.length} из ${data.length}`;
-      const parts = [];
+      resultsText.textContent = `Найдено: ${filtered.length}`;
+      const parts = [currentType === 'anime' ? 'раздел: Аниме' : 'раздел: Фильмы'];
       if (query) parts.push(`поиск: “${query}”`);
       if (selectedTags.length) parts.push(`теги: ${selectedTags.map(t => '#' + t).join(', ')}`);
       activeFilters.textContent = parts.join(' · ');
@@ -593,7 +403,6 @@
           img.onerror = null;
           img.src = placeholder(item.title, item.id || 0);
         });
-
         wrap.appendChild(img);
 
         const body = document.createElement('div');
@@ -617,27 +426,18 @@
         const actions = document.createElement('div');
         actions.className = 'card-actions';
 
-        const openBtn = document.createElement('button');
-        openBtn.type = 'button';
-        openBtn.className = 'btn';
-        openBtn.textContent = 'Открыть';
-        openBtn.addEventListener('click', (e) => {
-          e.stopPropagation();
-          openModal(item);
-        });
-
         const downloadBtn = document.createElement('a');
         downloadBtn.className = 'btn primary';
         downloadBtn.textContent = 'Скачать';
         downloadBtn.href = item.download || '#';
         downloadBtn.target = '_blank';
         downloadBtn.rel = 'noopener';
+        downloadBtn.addEventListener('click', (e) => e.stopPropagation());
         if (!item.download || item.download === '#') {
-          downloadBtn.setAttribute('aria-disabled', 'true');
           downloadBtn.addEventListener('click', (e) => e.preventDefault());
+          downloadBtn.setAttribute('aria-disabled', 'true');
         }
 
-        actions.appendChild(openBtn);
         actions.appendChild(downloadBtn);
 
         body.appendChild(h3);
@@ -653,6 +453,17 @@
       });
     }
 
+    function openViewer(src, title) {
+      viewerImg.src = src;
+      viewerTitle.textContent = title || 'Просмотр изображения';
+      viewer.classList.add('open');
+    }
+
+    function closeViewerFn() {
+      viewer.classList.remove('open');
+      viewerImg.src = '';
+    }
+
     function openModal(item) {
       modalTitle.textContent = item.title || 'Без названия';
       modalTags.textContent = (Array.isArray(item.tags) ? item.tags : []).map(t => '#' + t).join('  ');
@@ -661,13 +472,10 @@
       modalDownload.href = item.download || '#';
       modalDownload.target = '_blank';
       modalDownload.rel = 'noopener';
-      if (!item.download || item.download === '#') {
-        modalDownload.setAttribute('aria-disabled', 'true');
-        modalDownload.addEventListener('click', function preventOnce(e) {
-          e.preventDefault();
-          modalDownload.removeEventListener('click', preventOnce);
-        }, { once: true });
-      }
+      modalDownload.onclick = (e) => {
+        e.stopPropagation();
+        if (!item.download || item.download === '#') e.preventDefault();
+      };
 
       fragmentList.innerHTML = '';
       const fragments = Array.isArray(item.fragments) ? item.fragments : [];
@@ -683,7 +491,8 @@
 
           const img = document.createElement('img');
           img.alt = 'Фрагмент';
-          img.src = frag.img || placeholder(`${item.title} ${index + 1}`, (item.id || 0) + index + 1);
+          const src = frag.img || placeholder(`${item.title} ${index + 1}`, (item.id || 0) + index + 1);
+          img.src = src;
           img.addEventListener('error', () => {
             img.onerror = null;
             img.src = placeholder(`${item.title} ${index + 1}`, (item.id || 0) + index + 1);
@@ -694,6 +503,8 @@
 
           row.appendChild(img);
           row.appendChild(text);
+          row.addEventListener('click', () => openViewer(src, `${item.title} — фрагмент ${index + 1}`));
+
           fragmentList.appendChild(row);
         });
       }
@@ -720,7 +531,26 @@
       if (e.target === modal) modal.classList.remove('open');
     });
     document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape') modal.classList.remove('open');
+      if (e.key === 'Escape') {
+        modal.classList.remove('open');
+        closeViewerFn();
+      }
+    });
+
+    closeViewer.addEventListener('click', closeViewerFn);
+    viewer.addEventListener('click', (e) => {
+      if (e.target === viewer) closeViewerFn();
+    });
+
+    document.querySelectorAll('.tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('.tab').forEach(x => x.classList.remove('active'));
+        tab.classList.add('active');
+        currentType = tab.dataset.type;
+        selectedTags = [];
+        renderTags();
+        renderCards();
+      });
     });
 
     renderTags();
